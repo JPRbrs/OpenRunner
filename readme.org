@@ -1,0 +1,7 @@
+Here are the references that will be used to create this app:
+
+* OpenRunner project references
+- [[https://www.techrepublic.com/blog/software-engineer/take-advantage-of-androids-gps-api/][GPS tutorial]]
+- [[http://hmkcode.com/android-simple-sqlite-database-tutorial/][creating SQL lite db]]
+- [[https://stackoverflow.com/questions/7363112/best-way-to-work-with-dates-in-android-sqlite][dates in sqlite android]]
+- [[https://www.techiediaries.com/sqlite-create-table-foreign-key-relationships/][references]]
