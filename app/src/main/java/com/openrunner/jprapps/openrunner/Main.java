@@ -1,5 +1,11 @@
 package com.openrunner.jprapps.openrunner;
 
+import java.util.Calendar;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.location.Location;
@@ -12,16 +18,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.openrunner.jprapps.openrunner.Instant;
-import com.openrunner.jprapps.openrunner.MySQLiteHelper;
+import java.text.SimpleDateFormat;
 
 
 public class Main extends AppCompatActivity implements OnClickListener, LocationListener {
 
     private LocationManager locationManager;
     private static final long MIN_TIME = 1 * 30 * 1000; // GPS signal check every minute
+    private static final String DATE_FORMAT = "dd/MM/yyyy hh:mm:ss.SSS";
     MySQLiteHelper db = new MySQLiteHelper(this);
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +35,16 @@ public class Main extends AppCompatActivity implements OnClickListener, Location
         setContentView(R.layout.activity_main);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
+        }
         findViewById(R.id.settings_button).setOnClickListener(this);
     }
 
@@ -46,9 +61,22 @@ public class Main extends AppCompatActivity implements OnClickListener, Location
         float lng = (float) (loc.getLongitude());
         long time = System.currentTimeMillis();
 
+
+
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        String human_time = formatter.format(calendar.getTime());
+
+
+        SimpleDateFormat sdf  = new SimpleDateFormat("MM/dd/yyyy"); // see
+        sdf.format(calendar.getTime());
         ((TextView) findViewById(R.id.locat_label)).setText(
                 "Fine location = lat:" + Float.toString(lat) +
-                "longitude:" + Float.toString(lng) + " time: " + time
+                "longitude:" + Float.toString(lng) + " time: " + human_time
         );
 
         db.addInstant(new Instant(time, lat, lng, 1), getApplicationContext());
@@ -60,9 +88,16 @@ public class Main extends AppCompatActivity implements OnClickListener, Location
     protected void onResume() {
 
         super.onResume();
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
-
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
+        }
     }
 
     @Override
