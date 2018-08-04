@@ -20,7 +20,7 @@ import com.openrunner.jprapps.openrunner.MySQLiteHelper;
 public class Main extends AppCompatActivity implements OnClickListener, LocationListener {
 
     private LocationManager locationManager;
-    private static final long MIN_TIME = 1 * 60 * 1000; // GPS signal check every minute
+    private static final long MIN_TIME = 1 * 30 * 1000; // GPS signal check every minute
     MySQLiteHelper db = new MySQLiteHelper(this);
 
     @Override
