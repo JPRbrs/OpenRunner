@@ -31,4 +31,19 @@
         android:text="GPS Settings"
         android:id="@+id/settings_button"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dip"
+        android:layout_gravity="center"
+        android:text="Add last location"
+        android:id="@+id/add_to_list"/>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
 </LinearLayout>
